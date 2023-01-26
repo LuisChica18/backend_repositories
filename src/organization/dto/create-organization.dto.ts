@@ -1,4 +1,6 @@
-import { IsIn, IsString, MinLength } from "class-validator";
+import { IsArray, IsIn, IsOptional, IsString, MinLength } from "class-validator";
+import { Repository } from "../entities/repository.entity";
+import { Tribe } from "../entities/tribe.entity";
 
 export class CreateOrganizationDto {
 
@@ -8,4 +10,8 @@ export class CreateOrganizationDto {
 
     @IsIn([0, 1])
     status?: number;
+
+    @IsArray()
+    @IsOptional()
+    tribes?: Tribe[];
 }

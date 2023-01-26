@@ -1,9 +1,10 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { Organization } from './entities/organization.entity';
+import { Tribe } from './entities/tribe.entity';
 
 @Injectable()
 export class OrganizationService {
@@ -13,13 +14,26 @@ export class OrganizationService {
   constructor(
     @InjectRepository(Organization)
     private readonly organizationRepository: Repository<Organization>,
+
+    @InjectRepository(Tribe)
+    private readonly tribeRepository: Repository<Tribe>,
+
+    private readonly dataSource: DataSource,
   ){}
 
   async create(createOrganizationDto: CreateOrganizationDto) {
     try {
-      const organization = this.organizationRepository.create(createOrganizationDto);
+
+      const { tribes = [], ...organizationDetails } = createOrganizationDto;
+
+      const organization = this.organizationRepository.create({
+        ...organizationDetails,
+        tribes: tribes.map( tribe => this.tribeRepository.create({name: tribe.name, status: tribe.status}))
+      });
       await this.organizationRepository.save(organization);
-      return organization;
+
+      return {...organization, tribes: tribes};
+
     } catch (error) {
       this.handleExceptions(error);
     }
@@ -41,18 +55,42 @@ export class OrganizationService {
   }
 
   async update(id: number, updateOrganizationDto: UpdateOrganizationDto) {
+
+    const { tribes, ...toUpdate } = updateOrganizationDto;
     
     const organization = await this.organizationRepository.preload({
       id_organization: id,
-      ...updateOrganizationDto
+      ...toUpdate
     });
 
     if (!organization) 
       throw new NotFoundException(`Organization with id ${id} not found`);
 
+    // Query Runner - Transactional
+    const query = this.dataSource.createQueryRunner();
+    await query.connect();
+    await query.startTransaction();
+
     try {
-      await this.organizationRepository.save(organization);  
+
+      if (tribes)
+        await query.manager.delete(Tribe, {id_organization : id });
+
+      organization.tribes = tribes.map( tribe => this.tribeRepository.create({name: tribe.name, status: tribe.status}))
+
+      await query.manager.save(organization);
+      //await this.organizationRepository.save(organization);  
+
+      await query.commitTransaction();
+      await query.release;
+
+      return organization;
+
     } catch (error) {
+
+      await query.rollbackTransaction();
+      await query.release;
+
       this.handleExceptions(error);
     }
     
@@ -67,6 +105,6 @@ export class OrganizationService {
 
   private handleExceptions(error:any){
     this.logger.error(error);
-    throw new InternalServerErrorException(`Internal error. Report to admin system`)
+    throw new InternalServerErrorException(error.message)
   }
 }

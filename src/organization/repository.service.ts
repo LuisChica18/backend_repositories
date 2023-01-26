@@ -35,33 +35,27 @@ export class RepositoryService {
     if (!tribe)
       throw new NotFoundException(`La Tribu no se encuentra registrada`);
 
-//    const repo = await this.repoRepository.findBy({id_tribe: tribe});
-/*
-const query = this.repoRepository.createQueryBuilder();
-const repo = await query.where('id_tribe.id_tribe=:tribe1', {tribe1:tribe.id_tribe}).getMany();
-*/
+    const repo = await this.repoRepository.createQueryBuilder("id_tribe")
+    .leftJoinAndSelect(Metrics, "metrics", "metrics.id_repository = id_tribe.id_repository")
+    .where("id_tribe.id_tribe = :id", { id: tribe.id_tribe})
+    .getMany()
 
+    const repo1 = await this.repoRepository.createQueryBuilder("id_tribe")
+    .leftJoinAndSelect(Metrics, "metrics", "metrics.id_repository = id_tribe.id_repository")
+    .where("id_tribe.id_tribe = :id", { id: tribe.id_tribe})
+    .getSql();
 
-   const repo = await this.repoRepository.find({
-      relations: {
-        id_tribe: true,
-    },
-    where: {
-      id_tribe: {
-            id_tribe: 1
-        },
-    },
-})
-
-
+    Logger.error(repo1);
   
     if (!repo)
       throw new NotFoundException(`La Tribu no se encuentra registrada`);
     else {
+/*
       repo.forEach(repo => {
         if (repo.metrics.coverage < 75) 
           throw new NotFoundException(`La Tribu no tiene repositorios que cumplan con la cobertura necesaria`);
       });
+*/
     }
 
     return repo;

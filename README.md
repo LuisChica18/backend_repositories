@@ -47,6 +47,16 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
+## Database
+
+<p align="center">
+  <img src="repositories.png" alt="ER" /></a>
+</p>
+
+## Postman
+
+Collection end points for consume rest api ``repositories.postman_collection.json`` 
+
 ## Stay in touch
 
 - Author - [Luis Chica](https://www.linkedin.com/in/luis-chica-moncayo-7970232a/)

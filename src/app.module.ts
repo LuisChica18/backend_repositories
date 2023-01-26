@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RepositoriesModule } from './repositories/repositories.module';
 import { OrganizationModule } from './organization/organization.module';
-import { RepositoryEntityModule } from './repository-entity/repository-entity.module';
 
 @Module({
   imports: [
@@ -19,8 +18,7 @@ import { RepositoryEntityModule } from './repository-entity/repository-entity.mo
       autoLoadEntities: true,
       synchronize:true // produccion false, se puede manejar como variable de entorno 
     }),
-    OrganizationModule,
-    RepositoryEntityModule,
+    OrganizationModule
   ],
   controllers: [],
   providers: [],

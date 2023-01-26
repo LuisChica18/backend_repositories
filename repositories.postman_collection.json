@@ -1,0 +1,165 @@
+{
+	"info": {
+		"_postman_id": "3cfc173f-43e8-4eb1-9266-b96dbdad40e8",
+		"name": "repositories",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16230861"
+	},
+	"item": [
+		{
+			"name": "repositories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/repositories",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"repositories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "organizations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/organization",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"organization"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add organization",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"NTT DATA5\",\r\n    \"status\": 0,\r\n    \"tribes\": [\r\n        {\r\n            \"name\" : \"TeamB\",\r\n            \"status\": 1\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/api/organization",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"organization"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "organization",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/organization/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"organization",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update organization",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": 1,\r\n    \"tribes\": [\r\n        {\r\n            \"name\" : \"TeamC\",\r\n            \"status\": 0\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/api/organization/5",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"organization",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete organization",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/organization/6",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"organization",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ejercicio 3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/repository/6",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"repository",
+						"6"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

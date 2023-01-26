@@ -38,6 +38,6 @@ export class Repository {
     })
     status: string;
 
-    @OneToOne(() => Metrics, (metrics) => metrics.id_repository) // specify inverse side as a second parameter
-    metrics?: Metrics
+    @OneToOne(() => Metrics, (metrics) => metrics.id_repository, {eager:true}) // specify inverse side as a second parameter
+    metrics: Metrics
 }

@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Repository } from "./repository.entity";
 
 @Entity()
@@ -6,7 +6,7 @@ export class Metrics {
 
     @PrimaryGeneratedColumn()
     @OneToOne(() => Repository, (repo) => repo.metrics) // specify inverse side as a second parameter
-    @JoinColumn()
+    @JoinColumn({name: "id_repository"})
     id_repository: Repository;
 
     @Column('decimal', {

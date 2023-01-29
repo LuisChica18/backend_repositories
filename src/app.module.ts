@@ -10,7 +10,7 @@ import { OrganizationModule } from './organization/organization.module';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type:'postgres',
-//      url: 'postgresql://luis:zvY699YtkDpWmQL57jd6-Q@rigid-croaker-8394.7tt.cockroachlabs.cloud:26257/repositories?sslmode=verify-full',
+//      url: process.env.DB_URL,
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
       database: process.env.DB_NAME,

@@ -1,7 +1,8 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { createQueryBuilder, DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Metrics } from './entities/metrics.entity';
+import { Organization } from './entities/organization.entity';
 import { Repository as Repo } from './entities/repository.entity';
 import { Tribe } from './entities/tribe.entity';
 
@@ -14,13 +15,11 @@ export class RepositoryService {
     @InjectRepository(Repo)
     private readonly repoRepository: Repository<Repo>,
 
-    @InjectRepository(Metrics)
-    private readonly metricsRepository: Repository<Metrics>,
+    @InjectRepository(Organization)
+    private readonly organizationRepository: Repository<Organization>,
 
     @InjectRepository(Tribe)
     private readonly tribeRepository: Repository<Tribe>,
-
-    private readonly dataSource: DataSource,
   ){}
 
 
@@ -35,18 +34,13 @@ export class RepositoryService {
     if (!tribe)
       throw new NotFoundException(`La Tribu no se encuentra registrada`);
 
-    const repo = await this.repoRepository.createQueryBuilder("id_tribe")
-    .leftJoinAndSelect(Metrics, "metrics", "metrics.id_repository = id_tribe.id_repository")
-    .where("id_tribe.id_tribe = :id", { id: tribe.id_tribe})
-    .getMany()
+    const repo = await this.organizationRepository.createQueryBuilder("orga")
+    .leftJoinAndSelect(Tribe, "tribe", "tribe.idOrganizationIdOrganization = orga.id_organization")
+    .leftJoinAndSelect(Repo, "repo", "repo.idTribeIdTribe = tribe.id_tribe")
+    .leftJoinAndSelect(Metrics, "metrics", "metrics.id_repository = repo.id_repository")
+    .where("repo.idTribeIdTribe = :id", { id: tribe.id_tribe})
+    .getRawMany();
 
-    const repo1 = await this.repoRepository.createQueryBuilder("id_tribe")
-    .leftJoinAndSelect(Metrics, "metrics", "metrics.id_repository = id_tribe.id_repository")
-    .where("id_tribe.id_tribe = :id", { id: tribe.id_tribe})
-    .getSql();
-
-    Logger.error(repo1);
-  
     if (!repo)
       throw new NotFoundException(`La Tribu no se encuentra registrada`);
     else {
